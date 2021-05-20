@@ -1,4 +1,4 @@
-# Configure the AWS Provider
+###  **************STANDARD AWS START******************  ###
 terraform {
   required_providers {
     aws = {
@@ -24,7 +24,7 @@ provider "aws" {
   secret_key = var.secret_key
 }
 
-
+###  ***************STANDARD AWS END******************  ###
 
 resource "aws_eip" "eip"{
   vpc=true
