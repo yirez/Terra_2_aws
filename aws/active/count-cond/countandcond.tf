@@ -33,12 +33,34 @@ provider "aws" {
 }
 ###  **************STANDARD AWS END******************  ###
 
-
-resource "aws_instance" "this_is_a_name" {
+variable is_prod{
+  type = bool
+}
+resource "aws_instance" "this_is_prod" {
   ami =  "ami-043097594a7df80ec"
   instance_type = "t2.micro"
-  
+  #count=5
+  count= var.is_prod==true?5:0
 tags = {
     Name = "HelloWorld"
   }
+}
+resource "aws_instance" "this_is_test" {
+  ami =  "ami-043097594a7df80ec"
+  instance_type = "t2.micro"
+  #count=5
+  count= var.is_prod==true?0:2
+tags = {
+    Name = "HelloWorld"
+  }
+}
+resource "aws_iam_user" "prod_users" {
+  name = "prod_user${count.index}"
+  #count =2
+  count= var.is_prod==true?5:0
+}
+resource "aws_iam_user" "test_users" {
+  name = "test_user${count.index}"
+  #count =2
+  count= var.is_prod==true?0:2
 }
