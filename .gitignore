@@ -36,3 +36,6 @@ terraform.rc
 *.hcl
 *.tfstate
 *.backup
+
+# key-pairs should not be shared
+*.pem
