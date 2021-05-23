@@ -24,3 +24,18 @@ provider "aws" {
   secret_key = var.secret_key
 }
 ###  **************STANDARD AWS END******************  ###
+
+# reusing for multiple provider tests
+provider "aws" {
+  alias= "aws-eu-west"
+  region = "eu-west-1"
+  access_key = var.access_key
+  secret_key = var.secret_key
+}
+
+# reusing for multiple provider 2nd acc test
+provider "aws" {
+  alias= "aws-eu-central-acc2"
+  region = "eu-central-1"
+  profile="terraform2"
+}
