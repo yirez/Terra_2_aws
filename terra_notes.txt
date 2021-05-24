@@ -1,0 +1,156 @@
+https://irezyigit.medium.com/iac-using-terraform-to-aws-from-nothing-to-something-f1ef3e51813f
+
+Providers:
+- Responsible for understanding API interactions & expose resources
+- A provider for every major cloud or on-prem provider
+- Can use explicit version in provider block
+- terraform init -upgrade to change to latest
+- can use multiple providers with aliases. One without is called default.
+
+Terraform init
+- init working required_providers
+- search for module blocks and retrieve those
+- inits Providers
+- downloads and installs provider plugin for exec
+
+Terraform plan
+- creates exec plan
+- plans what actions needed to achieve resource state in tf
+
+Terraform apply
+- applies planned work
+- modifies state
+- resources created or modified on completion
+- if you remove resource block, will also destroy
+
+Terraform refresh
+- get updated infra status on managed infra
+- modifies state
+
+Terraform Destroy
+- Destroyed managed infra
+
+Terraform fmt
+- formats indentation of managed tf
+
+Terraform validate
+- validates tf syntax
+- does not write anything
+- useful for ci/cd quick checks
+
+Terraform import
+- İmport remote manual changes to terraform to update state of managed res
+- MUST change tf configs before
+
+Terraform lock
+- lock remote state file in s3 or such so as not to have conflicting state changes (if supported by backend)
+- force-unlock if something goes wrong
+
+Terraform taint
+- force recreating a resource
+- useful if manual operations on resources at server cannot be salvaged by import
+- can also taint resources
+
+backend
+- must be init in terraform blocks
+- used to keep state
+- can be partial. If so, missing backend vals must be entered
+via cli like ..init -backend-config="address=..." -backend-config="path=..."
+
+Provisioners
+- do actions in local or created machines for infra prep
+- not recommended
+- inside resource block
+- local, remote (ssh, winrm), file
+- if fail, throw exc by default or continue . modified via on_failure=continue
+- creation- time / destroy-time provisioners. Run when creating (by default) or when destroying
+
+Tf log verbosity
+- TF_LOG env set to TRACE, INFO, DEBUG, WARN, ERROR
+- TF_LOG_PATH to persist output
+
+local values
+- locally usable expressions
+- cannot reference themselves
+- no ref cycles
+
+data types
+- string, list, number, map
+
+workspaces
+- different workspace for different situations.
+- multiple state files of same tf configs.
+
+modules
+- remotely or locally stored ready made resource sets
+- modifiable attr if vals set with vars.
+- modules can call other modules
+- resources encapsulated so values only accessable if parent outputs
+- versions must be constrained to avoid unexpected changes
+- module versions only available in Tf registry or Tf cloud
+
+outputs
+- resource data for use from other modules and tf files
+- shows on cli when apply run
+- if sensitive=true set, no output to cmd
+- sensitive vals still recorded in state
+
+dependency
+- tf has implicit dependency. If you ref something from somewhere else
+it will get created first,
+- manual dependency possible ...{ ... depends_on)[aws_ami.abc]}
+
+data resources
+- get data from remote / compute and use elsewhere via output
+- data.aws_ami.abc.id
+
+functions
+- built in functions
+- no user defined
+- element : get item in index t from a list
+- lookup: lookup a key's value from a map. Can also return a default if nothing found
+- slice, not part of string
+- join, split, chomp, part of string
+
+variables
+- can be undefined and used in resource but must be entered as input by user
+- can be added via ...-var-file="secret.tfvars
+- can be used with default name terraform.tfvars to write only key=value
+- can be used from .tf files must must be like: variable "..." {...}
+- if var defined multiple times, last definition takes precidence
+- def order: env_vars, terraform.tfvars, terraform.tfvars.json ,-var, -var-file
+
+
+dynamic blocks
+- loop through a list/map
+- create same res type object with different argument values
+
+env_vars
+- usable frpö tf configs if entered in the format of TF_VAR_abc=123
+
+count & count.index
+- create multiple versions of same resource
+- the count number usable via count.index
+
+Sentinel
+- policy-as-code to check tf configs for tags, encryption, etc
+- usable after plan, before apply
+
+Security
+- store creds outside of tf vcs
+- keep states remote and secure
+- use cred as env
+
+Splat expr
+- output all list items x value with Splat aws_aa.lb[*].public_id
+
+Terminology
+-         Resource Type  local name of resource
+ resource "aws_instance" "abc"{
+
+-argument name    argument val
+  ami             ="123"
+}
+
+TF ADV
+- automation, versioning, reusability
